@@ -1,0 +1,19 @@
+package github.fcopardo.perfdemo
+
+import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.application
+import github.fcopardo.perfdemo.App
+
+fun main() = application {
+    Window(onCloseRequest = ::exitApplication) {
+        App()
+    }
+}
+
+@Preview
+@Composable
+fun AppDesktopPreview() {
+    App()
+}

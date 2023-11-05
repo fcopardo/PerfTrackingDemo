@@ -1,0 +1,14 @@
+package github.fcopardo.perfdemo.models.rest
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Filters (
+
+  @SerialName("id"     ) var id     : String?           = null,
+  @SerialName("name"   ) var name   : String?           = null,
+  @SerialName("type"   ) var type   : String?           = null,
+  @SerialName("values" ) var values : ArrayList<Values> = arrayListOf()
+
+)
