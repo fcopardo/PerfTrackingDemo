@@ -1,6 +1,8 @@
 package github.fcopardo.perfdemo.data.rest
 
-import github.fcopardo.perfdemo.models.rest.MLSearch
+import github.fcopardo.perfdemo.Constants
+import github.fcopardo.perfdemo.models.rest.items.MLItem
+import github.fcopardo.perfdemo.models.rest.search.MLSearch
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -11,6 +13,14 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 class MlRestApi {
+
+    companion object{
+        private var instance = MlRestApi()
+        public fun getInstance() : MlRestApi {
+            return instance
+        }
+    }
+
     private val api = HttpClient {
         install(ContentNegotiation){
             json(Json{
@@ -19,13 +29,40 @@ class MlRestApi {
             })
         }
     }
-
-    suspend fun searchFor() : MLSearch{
-        val request = api.get("https://api.mercadolibre.com/sites/MLA/search?category=MLA1055"){
+    suspend fun searchFor(searchTerms : List<String>) : MLSearch {
+        val searchString = StringBuilder()
+        searchTerms.forEach {
+            searchString.append(it)
+            searchString.append("\uFF00%20")
+        }
+        val request = api.get("https://api.mercadolibre.com/sites/MLC/search?q=lego\uFF00%20spider\uFF00%20gwen"){
             headers {
-                //append(HttpHeaders.Authorization, BuildConfig)
+                append(HttpHeaders.Authorization, Constants.api_key)
             }
         }.body<MLSearch>()
+        return request
+    }
+
+    suspend fun searchFor(searchTerms : String) : MLSearch {
+        val searchString = StringBuilder()
+        searchTerms.replace("  ", "").split(" ").forEach {
+            searchString.append(it)
+            searchString.append("\uFF00%20")
+        }
+        val request = api.get("https://api.mercadolibre.com/sites/MLC/search?q=lego\uFF00%20spider\uFF00%20gwen"){
+            headers {
+                append(HttpHeaders.Authorization, Constants.api_key)
+            }
+        }.body<MLSearch>()
+        return request
+    }
+
+    suspend fun getItem(id : String) : MLItem {
+        val request = api.get("https://api.mercadolibre.com/items/$id"){
+            headers {
+                append(HttpHeaders.Authorization, Constants.api_key)
+            }
+        }.body<MLItem>()
         return request
     }
 }

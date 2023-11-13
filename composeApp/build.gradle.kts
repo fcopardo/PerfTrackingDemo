@@ -59,7 +59,13 @@ kotlin {
                 implementation(libs.compose.ui)
                 implementation(libs.compose.ui.tooling.preview)
                 implementation(libs.androidx.activity.compose)
+                // ViewModel
+                implementation(libs.androidx.lifecycle.viewmodel.ktx)
+                // ViewModel utilities for Compose
+                implementation(libs.androidx.lifecycle.viewmodel.compose)
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation("io.coil-kt:coil:2.5.0")
+                implementation("io.coil-kt:coil-compose:2.5.0")
                 //implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
             }
         }
@@ -73,7 +79,7 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                //implementation("io.ktor:ktor-client-java:$ktorVersion")
+                implementation("io.ktor:ktor-client-java:$ktorVersion")
             }
         }
         val commonMain by getting {
@@ -89,6 +95,14 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 //implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
+                implementation("com.github.skydoves:orbital:0.3.2")
+            }
+        }
+
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
             }
         }
     }
