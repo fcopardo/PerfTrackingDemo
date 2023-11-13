@@ -27,6 +27,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -98,6 +100,7 @@ class MainView {
         fun ItemList(mlItems : List<Results>){
             LazyColumn(modifier = Modifier.padding(4.dp)) {
                 items(mlItems, key = {it.id!!}){ item ->
+                    var bookmarked = remember { mutableStateOf(false) }
                     Card(
                         shape = RoundedCornerShape(4.dp),
                         modifier = Modifier
@@ -115,10 +118,16 @@ class MainView {
                                 println("url is $firstImage")
                                 ImageLoader.getInstance()!!.load(firstImage)
                                 FloatingActionButton(
-                                    onClick = { /* Handle FAB click */ },
+                                    onClick = {
+                                        bookmarked.value = !bookmarked.value
+                                    },
                                     modifier = Modifier.align(Alignment.TopEnd).then(Modifier.size(20.dp, 20.dp))
                                 ) {
-                                    Icon(Icons.Filled.Favorite, contentDescription = null)
+                                    if(bookmarked.value){
+                                        Icon(Icons.Filled.Favorite, contentDescription = null)
+                                    } else {
+                                        Icon(Icons.Outlined.FavoriteBorder, contentDescription = null)
+                                    }
                                 }
                             }
                             Column(modifier = Modifier.padding(start = 8.dp)) {

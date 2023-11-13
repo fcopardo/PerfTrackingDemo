@@ -8,6 +8,7 @@ class KMPreviews {
     @Composable
     @Preview
     private fun myApp(){
-        MainView.MyApp()
+        MainView.MyApp(onSearch = {}) {
+        }
     }
 }
