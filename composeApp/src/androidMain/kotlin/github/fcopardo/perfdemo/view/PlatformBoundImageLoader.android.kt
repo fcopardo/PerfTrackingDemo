@@ -11,46 +11,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import coil.compose.AsyncImage
-import github.fcopardo.perfdemo.MyApplication
+import github.fcopardo.perfdemo.data.FileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okio.BufferedSink
-import okio.buffer
-import okio.sink
 import java.io.File
-import java.io.IOException
-import java.util.UUID
 
 actual class PlatformBoundImageLoader {
-    private val client = OkHttpClient()
 
     @Composable
     actual fun loadLocal(imageUri: String, modifier : Modifier) {
 
         val bitmapState: MutableState<LoadedFile?> = remember { mutableStateOf(null) }
 
-        var loadNewImage = false
-        if(bitmapState.value == null || bitmapState.value!!.isAddressEqual(imageUri)){
-            loadNewImage = true
-        }
-        if(loadNewImage){
-            GlobalScope.launch(Dispatchers.IO) {
-                try {
-                    val bitmap = BitmapFactory.decodeStream(File(imageUri).inputStream()).asImageBitmap()
-                    withContext(Dispatchers.Main) {
-                        bitmapState.value = LoadedFile(imageUri).apply {
-                            this.bitmap = bitmap
-                        }
+        if(bitmapState.value == null || bitmapState.value?.bitmap == null || bitmapState.value?.isAddressEqual(imageUri) == false){
+            FileManager.getInstance().getLocalBitmap(imageUri){ bitmap->
+                withContext(Dispatchers.Main) {
+                    bitmapState.value = LoadedFile(imageUri).apply {
+                        this.bitmap = bitmap
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
+        }
+        if(bitmapState.value?.bitmap!=null){
             Image(
                 bitmap = bitmapState.value!!.bitmap!!,
                 contentDescription = null,
@@ -64,45 +49,12 @@ actual class PlatformBoundImageLoader {
     actual fun loadNetwork(imageUri: String, modifier : Modifier) {
         val bitmapState: MutableState<LoadedFile?> = remember { mutableStateOf(null) }
 
-        if(bitmapState.value == null || bitmapState.value?.bitmap == null) {
-
-            GlobalScope.launch(Dispatchers.IO) {
-                var dir = MyApplication.getInstance().cacheDir
-                var targetFilePath = "$dir${File.separator}${UUID.nameUUIDFromBytes(imageUri.toByteArray())}.${imageUri.substringAfterLast(".")}"
-                var targetFile = File(targetFilePath)
-                if(!targetFile.exists()){
-                    val request = Request.Builder()
-                        .url(imageUri)
-                        .get()
-                        .build()
-
-                    client.newCall(request).execute().use { response ->
-                        if (!response.isSuccessful) throw IOException("Unexpected code $response")
-
-                        for ((name, value) in response.headers) {
-                            println("image request headers $name: $value")
-                        }
-
-                        response.body?.let { responseBody ->
-                            dir.mkdirs()
-                            if(targetFile.createNewFile()){
-                                val sink : BufferedSink = targetFile.sink().buffer()
-                                sink.writeAll(responseBody.source())
-                                sink.close()
-                            }
-                        }
+        if(bitmapState.value == null || bitmapState.value?.bitmap == null || bitmapState.value?.isAddressEqual(imageUri) == false) {
+            FileManager.getInstance().downloadBitmap(imageUri) { decodedBitmap ->
+                withContext(Dispatchers.Main) {
+                    bitmapState.value = LoadedFile(imageUri).apply {
+                        this.bitmap = decodedBitmap
                     }
-                }
-                try {
-                    val bitmap = BitmapFactory.decodeFile(targetFilePath)
-                    val decodedBitmap = bitmap.asImageBitmap()
-                    withContext(Dispatchers.Main) {
-                        bitmapState.value = LoadedFile(imageUri).apply {
-                            this.bitmap = decodedBitmap
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
         }
@@ -113,9 +65,6 @@ actual class PlatformBoundImageLoader {
                 contentScale = ContentScale.Fit,
                 modifier = modifier.then(Modifier.fillMaxSize())
             )
-            println("url is loadNetwork, image should be showing up now")
-        } else {
-            println("url is loadNetwork, loading now")
         }
     }
 }
