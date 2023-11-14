@@ -33,21 +33,24 @@ class MlRestApi {
         val searchString = StringBuilder()
         searchTerms.forEach {
             searchString.append(it)
-            searchString.append("\uFF00%20")
+            //searchString.append("\uFF00%20")
+            searchString.append("%20")
         }
-        return search(searchTerms.toString())
+        return search(searchString.toString())
     }
 
     suspend fun searchFor(searchTerms : String) : MLSearch {
         val searchString = StringBuilder()
         searchTerms.replace("  ", "").split(" ").forEach {
             searchString.append(it)
-            searchString.append("\uFF00%20")
+            searchString.append("%20")
         }
-        return search(searchTerms)
+        return search(searchString.toString())
     }
 
     private suspend fun search(searchTerms : String): MLSearch {
+        var searchTerm = "https://api.mercadolibre.com/sites/MLC/search?q=lego%20minifigura%20spider%20"
+        println(searchTerm)
         val request = api.get("https://api.mercadolibre.com/sites/MLC/search?q=$searchTerms"){
             headers {
                 append(HttpHeaders.Authorization, Constants.api_key)
