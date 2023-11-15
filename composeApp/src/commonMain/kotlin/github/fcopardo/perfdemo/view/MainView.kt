@@ -43,6 +43,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import github.fcopardo.perfdemo.models.rest.items.MLItem
 import github.fcopardo.perfdemo.models.rest.search.Results
+import github.fcopardo.perfdemo.tracing.EventTracer
+import io.ktor.util.date.getTimeMillis
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class MainView {
@@ -71,7 +74,9 @@ class MainView {
             TopAppBar(
                 title = { Text("My App") },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle navigation icon click */ }) {
+                    IconButton(onClick = {
+                        EventTracer.instance.write()
+                    }) {
                         Icon(Icons.Filled.Menu, contentDescription = "Navigation Drawer Button")
                     }
                 },
@@ -107,6 +112,23 @@ class MainView {
                             .fillMaxWidth()
                             .padding(4.dp)
                     ) {
+                        val time = getTimeMillis()
+
+                        val args = mutableMapOf<String, String>().apply {
+                            item.id?.let {
+                                this["itemId"] = it
+                            }
+                        }
+
+                        val safeId = if(item.id != null){
+                            item.id!!
+                        } else {
+                            ""
+                        }
+
+                        val categories = mutableListOf<String>("mainview", safeId)
+
+                        EventTracer.instance.trace("render${item.id}_$time", categories, time, 0, 0, args)
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(modifier = Modifier.size(120.dp)) {
 
@@ -115,7 +137,6 @@ class MainView {
                                 } else {
                                     ""
                                 }
-                                println("url is $firstImage")
                                 ImageLoader.getInstance()!!.load(firstImage)
                                 FloatingActionButton(
                                     onClick = {
@@ -142,6 +163,7 @@ class MainView {
                                 Text(text = "${item.installments?.amount} X ${item.installments?.quantity}", style = MaterialTheme.typography.body1)
                             }
                         }
+                        EventTracer.instance.trace("render${item.id}_$time", categories, getTimeMillis(), 0 ,0, args)
                     }
                 }
             }

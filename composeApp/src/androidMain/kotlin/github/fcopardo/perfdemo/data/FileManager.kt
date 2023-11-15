@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import github.fcopardo.perfdemo.MyApplication
 import github.fcopardo.perfdemo.platform.threading.Scopes
+import github.fcopardo.perfdemo.tracing.EventTracer
+import io.ktor.util.date.getTimeMillis
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,11 +30,13 @@ class FileManager {
 
     fun downloadBitmap(url : String, callback : suspend (bitmap : ImageBitmap)->Unit){
         Scopes.getIOScope().launch {
+            var time = getTimeMillis()
+            EventTracer.instance.trace("download_${url}_${time}", mutableListOf("mainview", url), getTimeMillis(), 0, 2)
             val dir = MyApplication.getInstance().cacheDir
             val targetFilePath = if(url.lastIndexOf(".")>-1){ 
-                "$dir${File.separator}${UUID.nameUUIDFromBytes(url.toByteArray())}.${url.substringAfterLast(".")}"
+                "${dir.path}${File.separator}${UUID.nameUUIDFromBytes(url.toByteArray())}.${url.substringAfterLast(".")}"
             } else {
-                "$dir${File.separator}${UUID.nameUUIDFromBytes(url.toByteArray())}}"
+                "${dir.path}${File.separator}${UUID.nameUUIDFromBytes(url.toByteArray())}}"
             }
             
             val targetFile = File(targetFilePath)
@@ -41,18 +45,21 @@ class FileManager {
                     .url(url)
                     .get()
                     .build()
+                try{
+                    client.newCall(request).execute().use { response ->
+                        if (!response.isSuccessful) throw IOException("Unexpected code $response")
 
-                client.newCall(request).execute().use { response ->
-                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
-
-                    response.body?.let { responseBody ->
-                        dir.mkdirs()
-                        if(targetFile.createNewFile()){
-                            val sink : BufferedSink = targetFile.sink().buffer()
-                            sink.writeAll(responseBody.source())
-                            sink.close()
+                        response.body?.let { responseBody ->
+                            dir.mkdirs()
+                            if(targetFile.createNewFile()){
+                                val sink : BufferedSink = targetFile.sink().buffer()
+                                sink.writeAll(responseBody.source())
+                                sink.close()
+                            }
                         }
                     }
+                }catch (e : Exception){
+                    e.printStackTrace()
                 }
             }
             try {
@@ -62,6 +69,7 @@ class FileManager {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+            EventTracer.instance.trace("download_${url}_${time}", mutableListOf("mainview", url), getTimeMillis(), 0, 2)
         }
     }
     

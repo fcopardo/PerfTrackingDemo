@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import github.fcopardo.perfdemo.data.rest.MlRestApi
 import github.fcopardo.perfdemo.models.rest.items.MLItem
+import github.fcopardo.perfdemo.platform.threading.Scopes
+import github.fcopardo.perfdemo.tracing.EventTracer
 import github.fcopardo.perfdemo.view.ImageLoader
 import github.fcopardo.perfdemo.view.MainAndroidView
 import github.fcopardo.perfdemo.view.MainView
@@ -21,11 +23,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainAndroidView.Render()
         }
-        runBlocking {
-            var result = MlRestApi.getInstance().searchFor(mutableListOf("lego", "gwen"))
-            println(result.results.size)
-        }
+    }
 
+    override fun onDestroy() {
+        EventTracer.instance.stop()
+        Scopes.end()
+        super.onDestroy()
     }
 }
 

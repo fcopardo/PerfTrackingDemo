@@ -3,6 +3,7 @@ package github.fcopardo.perfdemo.data.rest
 import github.fcopardo.perfdemo.Constants
 import github.fcopardo.perfdemo.models.rest.items.MLItem
 import github.fcopardo.perfdemo.models.rest.search.MLSearch
+import github.fcopardo.perfdemo.tracing.EventTracer
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -10,6 +11,7 @@ import io.ktor.client.request.get
 import io.ktor.http.HttpHeaders
 import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.util.date.getTimeMillis
 import kotlinx.serialization.json.Json
 
 class MlRestApi {
@@ -49,8 +51,6 @@ class MlRestApi {
     }
 
     private suspend fun search(searchTerms : String): MLSearch {
-        var searchTerm = "https://api.mercadolibre.com/sites/MLC/search?q=lego%20minifigura%20spider%20"
-        println(searchTerm)
         val request = api.get("https://api.mercadolibre.com/sites/MLC/search?q=$searchTerms"){
             headers {
                 append(HttpHeaders.Authorization, Constants.api_key)

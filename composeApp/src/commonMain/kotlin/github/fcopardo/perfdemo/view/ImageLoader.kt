@@ -22,10 +22,8 @@ class ImageLoader(private var loader : PlatformBoundImageLoader) {
     fun load(image : String?, modifier : Modifier = Modifier){
         if(image.isNullOrEmpty()) return
         if(image.isUrl()){
-            println("url is network : $image")
             loadNetwork(image, modifier)
         } else {
-            println("url is not network : $image")
             loadLocal(image, modifier)
         }
     }

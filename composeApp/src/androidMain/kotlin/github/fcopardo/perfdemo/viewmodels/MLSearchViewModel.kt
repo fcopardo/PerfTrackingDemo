@@ -6,14 +6,18 @@ import androidx.compose.runtime.setValue
 import github.fcopardo.perfdemo.models.domain.RepositoryResult
 import github.fcopardo.perfdemo.models.rest.search.MLSearch
 import github.fcopardo.perfdemo.repositories.MLSearchRepository
+import github.fcopardo.perfdemo.tracing.EventTracer
 import kotlinx.coroutines.launch
 
 class MLSearchViewModel : CustomScopedViewModel() {
 
     private var loadedPages by mutableStateOf(mutableMapOf<Int, Int>())
-    var searchState by mutableStateOf(ViewModelValue<MLSearch>(MLSearch(), true, ""))
+    var searchState by mutableStateOf(ViewModelValue<MLSearch>(MLSearch(), false, ""))
+    private var currentTerms = ""
 
     fun loadSearch(terms : String){
+        currentTerms = terms
+        EventTracer.instance.trace("search_${terms}_vm", "mainview", System.currentTimeMillis())
         scopeProvider.getScope().launch {
             MLSearchRepository.get().getSearchResults(terms).collect{
                 setState(it)
@@ -30,6 +34,7 @@ class MLSearchViewModel : CustomScopedViewModel() {
             var newState = ViewModelValue<MLSearch>(MLSearch(), false, repoData.getMessage())
             searchState = newState
         }
+        EventTracer.instance.trace("search_${currentTerms}_vm", "mainview", System.currentTimeMillis())
     }
 
 }

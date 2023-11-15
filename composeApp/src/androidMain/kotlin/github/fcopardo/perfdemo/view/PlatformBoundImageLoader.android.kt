@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import github.fcopardo.perfdemo.data.FileManager
+import github.fcopardo.perfdemo.tracing.EventTracer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -48,8 +49,11 @@ actual class PlatformBoundImageLoader {
     @Composable
     actual fun loadNetwork(imageUri: String, modifier : Modifier) {
         val bitmapState: MutableState<LoadedFile?> = remember { mutableStateOf(null) }
-
+        var traceName = ""
+        var threadId = 3
         if(bitmapState.value == null || bitmapState.value?.bitmap == null || bitmapState.value?.isAddressEqual(imageUri) == false) {
+            traceName = "load_${imageUri}_download"
+            EventTracer.instance.trace(traceName, "mainview", System.currentTimeMillis(), 0, threadId)
             FileManager.getInstance().downloadBitmap(imageUri) { decodedBitmap ->
                 withContext(Dispatchers.Main) {
                     bitmapState.value = LoadedFile(imageUri).apply {
@@ -57,6 +61,10 @@ actual class PlatformBoundImageLoader {
                     }
                 }
             }
+        } else {
+            traceName = "load_${imageUri}_cache"
+            threadId = 0
+            EventTracer.instance.trace(traceName, "mainview", System.currentTimeMillis(), 0 , threadId)
         }
         if(bitmapState.value?.bitmap!=null){
             Image(
@@ -66,6 +74,7 @@ actual class PlatformBoundImageLoader {
                 modifier = modifier.then(Modifier.fillMaxSize())
             )
         }
+        EventTracer.instance.trace(traceName, "mainview", System.currentTimeMillis(), 0, threadId)
     }
 }
 
