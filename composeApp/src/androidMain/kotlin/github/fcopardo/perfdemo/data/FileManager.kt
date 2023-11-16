@@ -65,11 +65,12 @@ class FileManager {
             try {
                 val bitmap = BitmapFactory.decodeFile(targetFilePath)
                 val decodedBitmap = bitmap.asImageBitmap()
+                EventTracer.instance.trace("download_${url}_${time}", mutableListOf("mainview", url), getTimeMillis(), 0, 2)
                 callback(decodedBitmap)
             } catch (e: Exception) {
+                EventTracer.instance.trace("download_${url}_${time}", mutableListOf("mainview", url), getTimeMillis(), 0, 2)
                 e.printStackTrace()
             }
-            EventTracer.instance.trace("download_${url}_${time}", mutableListOf("mainview", url), getTimeMillis(), 0, 2)
         }
     }
     

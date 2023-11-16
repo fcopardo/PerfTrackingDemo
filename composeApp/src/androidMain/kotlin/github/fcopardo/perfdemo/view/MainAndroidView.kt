@@ -1,21 +1,21 @@
 package github.fcopardo.perfdemo.view
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import github.fcopardo.perfdemo.models.rest.items.MLItem
 import github.fcopardo.perfdemo.viewmodels.MLSearchViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import github.fcopardo.perfdemo.models.rest.search.Results
 import github.fcopardo.perfdemo.tracing.EventTracer
+import github.fcopardo.perfdemo.tracing.NativeTracer
 
 class MainAndroidView {
     companion object{
         @Composable
         fun Render(viewModel: MLSearchViewModel = viewModel()){
-            val name = "start_${System.currentTimeMillis()}"
-            EventTracer.instance.trace(name, "mainview", System.currentTimeMillis())
+            val time = System.currentTimeMillis()
+            //NativeTracer.instance.beginTrace("app_session_$time", false)
+            val name = "start_${time}"
+            EventTracer.instance.trace(name, "mainview", time)
             val searchTerms = remember { mutableStateOf<String>("") }
             val searchResult = viewModel.searchState
 

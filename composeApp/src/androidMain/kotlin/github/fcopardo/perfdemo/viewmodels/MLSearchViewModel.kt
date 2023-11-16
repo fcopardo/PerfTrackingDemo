@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 class MLSearchViewModel : CustomScopedViewModel() {
 
-    private var loadedPages by mutableStateOf(mutableMapOf<Int, Int>())
     var searchState by mutableStateOf(ViewModelValue<MLSearch>(MLSearch(), false, ""))
     private var currentTerms = ""
 

@@ -105,7 +105,7 @@ class MainView {
         fun ItemList(mlItems : List<Results>){
             LazyColumn(modifier = Modifier.padding(4.dp)) {
                 items(mlItems, key = {it.id!!}){ item ->
-                    var bookmarked = remember { mutableStateOf(false) }
+                    val bookmarked = remember { mutableStateOf(false) }
                     Card(
                         shape = RoundedCornerShape(4.dp),
                         modifier = Modifier

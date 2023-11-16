@@ -34,9 +34,11 @@ class Executors {
         fun getIOExecutor() : ThreadPoolExecutor {
             if(!this::iOExecutor.isInitialized){
                 val poolSize = if(isDeviceStressed()){
-                    highPowerCluster*2
+                    //highPowerCluster*2
+                    highPowerCluster*3
                 } else {
-                    highPowerCluster*2
+                    //highPowerCluster*2
+                    highPowerCluster*4
                 }
                 iOExecutor = ThreadPoolExecutor(cores, poolSize, 5000, TimeUnit.MILLISECONDS, LinkedBlockingQueue<Runnable>())
             }

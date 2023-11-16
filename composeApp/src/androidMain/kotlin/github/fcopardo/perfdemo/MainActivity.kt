@@ -5,15 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import github.fcopardo.perfdemo.data.rest.MlRestApi
-import github.fcopardo.perfdemo.models.rest.items.MLItem
 import github.fcopardo.perfdemo.platform.threading.Scopes
 import github.fcopardo.perfdemo.tracing.EventTracer
+import github.fcopardo.perfdemo.tracing.NativeTracer
 import github.fcopardo.perfdemo.view.ImageLoader
 import github.fcopardo.perfdemo.view.MainAndroidView
-import github.fcopardo.perfdemo.view.MainView
 import github.fcopardo.perfdemo.view.PlatformBoundImageLoader
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,10 +22,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onDestroy() {
+    override fun onPause(){
         EventTracer.instance.stop()
+        NativeTracer.instance.endTrace()
+        super.onPause()
+    }
+
+    override fun onStop(){
         Scopes.end()
-        super.onDestroy()
+        super.onStop()
     }
 }
 
