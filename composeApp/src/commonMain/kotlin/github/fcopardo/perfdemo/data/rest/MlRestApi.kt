@@ -12,9 +12,20 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.date.getTimeMillis
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.cancel
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class MlRestApi {
+
+    interface CacheProvider {
+        fun saveData(key : String, data : String)
+        fun getData(key : String) : String
+    }
 
     companion object{
         private var instance = MlRestApi()
@@ -31,6 +42,9 @@ class MlRestApi {
             })
         }
     }
+
+    var cacheProvider : CacheProvider? = null
+    private val json = Json { prettyPrint = true }
     suspend fun searchFor(searchTerms : List<String>) : MLSearch {
         val searchString = StringBuilder()
         searchTerms.forEach {
@@ -51,12 +65,29 @@ class MlRestApi {
     }
 
     private suspend fun search(searchTerms : String): MLSearch {
-        val request = api.get("https://api.mercadolibre.com/sites/MLC/search?q=$searchTerms"){
-            headers {
-                append(HttpHeaders.Authorization, Constants.api_key)
+        try{
+            val request = api.get("https://api.mercadolibre.com/sites/MLC/search?q=$searchTerms"){
+                headers {
+                    append(HttpHeaders.Authorization, Constants.api_key)
+                }
+            }.body<MLSearch>()
+            cacheProvider?.saveData(searchTerms, json.encodeToString(request))
+            return request
+        }catch(e : Exception){
+            e.printStackTrace()
+            cacheProvider?.let {
+                val data = it.getData(searchTerms)
+                if(data.isNotEmpty()) {
+                    try {
+                        return Json.decodeFromString<MLSearch>(data)
+                    }
+                    catch(e : Exception){
+                        e.printStackTrace()
+                    }
+                }
             }
-        }.body<MLSearch>()
-        return request
+        }
+        return MLSearch()
     }
 
     suspend fun getItem(id : String) : MLItem {
