@@ -9,6 +9,7 @@ plugins {
     kotlin("plugin.serialization").version("1.9.10")
     //id("app.cash.sqldelight") version "2.0.0"
     id("com.github.gmazzo.buildconfig") version "4.1.2"
+    id("io.github.ttypic.swiftklib") version "0.5.1"
 }
 
 repositories {
@@ -26,6 +27,7 @@ buildConfig {
     className("Constants")   // forces the class name. Defaults to 'BuildConfig'
     packageName("github.fcopardo.perfdemo")
     buildConfigField("String", "api_key", "\"$apikey\"")
+    buildConfigField("String", "api_key2", "\"$apikey\"")
 }
 
 kotlin {

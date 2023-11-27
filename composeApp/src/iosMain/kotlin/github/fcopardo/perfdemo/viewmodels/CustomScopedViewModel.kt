@@ -1,14 +1,15 @@
 package github.fcopardo.perfdemo.viewmodels
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import github.fcopardo.perfdemo.concurrency.ScopeProvider
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 
-abstract class CustomScopedViewModel : ViewModel() {
+abstract class CustomScopedViewModel {
     var scopeProvider : ScopeProvider = object : ScopeProvider {
+        private lateinit var scope : CoroutineScope
         override fun getScope(): CoroutineScope {
-            return viewModelScope
+            if(!::scope.isInitialized) scope = MainScope()
+            return scope
         }
     }
 }

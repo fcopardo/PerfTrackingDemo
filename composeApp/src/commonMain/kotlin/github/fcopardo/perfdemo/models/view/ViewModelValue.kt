@@ -1,4 +1,4 @@
-package github.fcopardo.perfdemo.viewmodels
+package github.fcopardo.perfdemo.models.view
 
 sealed class ViewModelResult<T> {
     data class Success<T>(val value: T) : ViewModelResult<T>()

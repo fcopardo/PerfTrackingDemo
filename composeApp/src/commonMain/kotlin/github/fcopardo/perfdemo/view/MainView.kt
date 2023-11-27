@@ -18,7 +18,6 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -27,7 +26,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,11 +39,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import github.fcopardo.perfdemo.models.rest.items.MLItem
 import github.fcopardo.perfdemo.models.rest.search.Results
 import github.fcopardo.perfdemo.tracing.EventTracer
 import io.ktor.util.date.getTimeMillis
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class MainView {
@@ -130,7 +126,7 @@ class MainView {
 
                         EventTracer.instance.trace("render${item.id}_$time", categories, time, 0, 0, args)
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(modifier = Modifier.size(120.dp)) {
+                                Box(modifier = Modifier.size(120.dp)) {
 
                                 val firstImage = if(item.thumbnail != null){
                                     item.thumbnail

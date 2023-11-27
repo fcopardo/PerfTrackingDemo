@@ -8,6 +8,7 @@ import github.fcopardo.perfdemo.models.rest.search.MLSearch
 import github.fcopardo.perfdemo.models.view.ViewModelValue
 import github.fcopardo.perfdemo.repositories.MLSearchRepository
 import github.fcopardo.perfdemo.tracing.EventTracer
+import io.ktor.util.date.getTimeMillis
 import kotlinx.coroutines.launch
 
 class MLSearchViewModel : CustomScopedViewModel() {
@@ -17,7 +18,7 @@ class MLSearchViewModel : CustomScopedViewModel() {
 
     fun loadSearch(terms : String){
         currentTerms = terms
-        EventTracer.instance.trace("search_${terms}_vm", "mainview", System.currentTimeMillis())
+        EventTracer.instance.trace("search_${terms}_vm", "mainview", getTimeMillis())
         scopeProvider.getScope().launch {
             MLSearchRepository.get().getSearchResults(terms).collect{
                 setState(it)
@@ -34,6 +35,6 @@ class MLSearchViewModel : CustomScopedViewModel() {
             var newState = ViewModelValue<MLSearch>(MLSearch(), false, repoData.getMessage())
             searchState = newState
         }
-        EventTracer.instance.trace("search_${currentTerms}_vm", "mainview", System.currentTimeMillis())
+        EventTracer.instance.trace("search_${currentTerms}_vm", "mainview", getTimeMillis())
     }
 }
