@@ -33,23 +33,25 @@ actual class PlatformBoundImageLoader {
     @Composable
     actual fun loadNetwork(imageUri: String, modifier: Modifier) {
         val bitmapState: MutableState<LoadedFile?> = remember { mutableStateOf(null) }
-        jobScope.getScope().launch {
-            NSURL.URLWithString(imageUri)?.let { url ->
-                val request = NSMutableURLRequest.requestWithURL(url)
-                request.setHTTPMethod("GET")
-                val task = NSURLSession.sharedSession.dataTaskWithRequest(request) { data , res, err ->
-                    jobScope.getScope().launch {
-                        data?.let {
-                            val image = UIImage(it).toImageBitmap()
-                            withContext(Dispatchers.Main) {
-                                bitmapState.value = LoadedFile(imageUri).apply {
-                                    this.bitmap = image
+        if(bitmapState.value?.isAddressEqual(imageUri)!=true){
+            jobScope.getScope().launch {
+                NSURL.URLWithString(imageUri)?.let { url ->
+                    val request = NSMutableURLRequest.requestWithURL(url)
+                    request.setHTTPMethod("GET")
+                    val task = NSURLSession.sharedSession.dataTaskWithRequest(request) { data , res, err ->
+                        jobScope.getScope().launch {
+                            data?.let {
+                                val image = UIImage(it).toImageBitmap()
+                                withContext(Dispatchers.Main) {
+                                    bitmapState.value = LoadedFile(imageUri).apply {
+                                        this.bitmap = image
+                                    }
                                 }
                             }
                         }
                     }
+                    task.resume()
                 }
-                task.resume()
             }
         }
         if(bitmapState.value?.bitmap!=null){
