@@ -1,6 +1,5 @@
 package github.fcopardo.perfdemo.view
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -8,18 +7,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import github.fcopardo.perfdemo.data.FileManager
 import github.fcopardo.perfdemo.tracing.EventTracer
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import java.io.File
 
 actual class PlatformBoundImageLoader {
 
@@ -89,22 +82,5 @@ actual class PlatformBoundImageLoader {
             contentScale = ContentScale.Fit,
             modifier = modifier.then(Modifier.fillMaxSize()))
         EventTracer.instance.trace(traceName, "mainview", System.currentTimeMillis(), 0, 0)
-    }
-}
-
-class LoadedFile {
-    var bitmap : ImageBitmap ?=null
-    var address : String = ""
-        set(value) {
-            if (value != address) bitmap = null
-            field = value
-        }
-
-    constructor(url : String){
-        address = url
-    }
-
-    fun isAddressEqual(url : String) : Boolean {
-        return address == url
     }
 }

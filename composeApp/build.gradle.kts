@@ -1,6 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,13 +7,8 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     kotlin("plugin.serialization").version("1.9.10")
     //id("app.cash.sqldelight") version "2.0.0"
-    id("com.github.gmazzo.buildconfig") version "4.1.2"
-    id("io.github.ttypic.swiftklib") version "0.5.1"
-}
-
-repositories {
-    google()
-    mavenCentral()
+    alias(libs.plugins.buildConfig)
+    alias(libs.plugins.swiftKLib)
 }
 
 val coroutinesVersion = "1.7.3"
@@ -31,8 +25,6 @@ buildConfig {
 }
 
 kotlin {
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    targetHierarchy.default()
 
     androidTarget {
         compilations.all {
@@ -69,13 +61,17 @@ kotlin {
                 implementation("io.coil-kt:coil:2.5.0")
                 implementation("io.coil-kt:coil-compose:2.5.0")
                 //implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(project(":commonLib"))
             }
         }
-        val iosMain by getting {
+        val iosMain by creating {
             dependencies {
+                implementation(libs.kotlinx.coroutines.core)
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
                 //implementation("app.cash.sqldelight:native-driver:$sqlDelightVersion")
                 //implementation("app.cash.sqldelight:native-driver:2.0.0")
+                implementation(project(":commonLib"))
             }
         }
         val desktopMain by getting {
@@ -98,6 +94,7 @@ kotlin {
                 //implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
                 implementation("com.github.skydoves:orbital:0.3.2")
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
 
