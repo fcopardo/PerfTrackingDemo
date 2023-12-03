@@ -8,9 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import github.fcopardo.perfdemo.platform.threading.Scopes
 import github.fcopardo.perfdemo.tracing.EventTracer
 import github.fcopardo.perfdemo.tracing.NativeTracer
-import github.fcopardo.perfdemo.view.ImageLoader
 import github.fcopardo.perfdemo.view.MainAndroidView
-import github.fcopardo.perfdemo.view.PlatformBoundImageLoader
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

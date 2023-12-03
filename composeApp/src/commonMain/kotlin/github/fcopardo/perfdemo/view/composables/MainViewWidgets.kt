@@ -45,7 +45,7 @@ import github.fcopardo.perfdemo.view.ImageLoader
 import io.ktor.util.date.getTimeMillis
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
-class MainView {
+class MainViewWidgets {
 
     companion object {
 
