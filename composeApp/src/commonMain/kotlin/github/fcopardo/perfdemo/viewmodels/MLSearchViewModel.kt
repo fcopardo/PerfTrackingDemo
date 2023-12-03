@@ -19,7 +19,7 @@ class MLSearchViewModel : CustomScopedViewModel() {
     fun loadSearch(terms : String){
         currentTerms = terms
         EventTracer.instance.trace("search_${terms}_vm", "mainview", getTimeMillis())
-        scopeProvider.getScope().launch {
+        getScopeProvider().getScope().launch {
             MLSearchRepository.get().getSearchResults(terms).collect{
                 setState(it)
             }
