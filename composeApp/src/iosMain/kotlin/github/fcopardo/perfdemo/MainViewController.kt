@@ -10,5 +10,5 @@ import platform.UIKit.UIViewController
 fun MainViewController() : UIViewController {
     ImageLoader.setPlatformLoader(PlatformBoundImageLoader())
     val model = MLSearchViewModel()
-    return ComposeUIViewController { MainIosView.Render(model) }
+    return ComposeUIViewController { MainIosView.Render() }
 }

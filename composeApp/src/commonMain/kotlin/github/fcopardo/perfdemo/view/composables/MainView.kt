@@ -1,4 +1,4 @@
-package github.fcopardo.perfdemo.view
+package github.fcopardo.perfdemo.view.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import github.fcopardo.perfdemo.models.rest.search.Results
 import github.fcopardo.perfdemo.tracing.EventTracer
+import github.fcopardo.perfdemo.view.ImageLoader
 import io.ktor.util.date.getTimeMillis
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 

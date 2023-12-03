@@ -51,7 +51,7 @@ actual class PlatformBoundImageLoader {
         val bitmapState: MutableState<LoadedFile?> = remember { mutableStateOf(null) }
         val time = System.currentTimeMillis()
         val traceName = "load_${imageUri}_cache_$time"
-        if(bitmapState.value == null || bitmapState.value?.bitmap == null || bitmapState.value?.isAddressEqual(imageUri) == false) {
+        if(bitmapState.value?.isAddressEqual(imageUri)!=true){
             FileManager.getInstance().downloadBitmap(imageUri) { decodedBitmap ->
                 withContext(Dispatchers.Main) {
                     bitmapState.value = LoadedFile(imageUri).apply {

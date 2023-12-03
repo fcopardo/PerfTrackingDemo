@@ -2,7 +2,7 @@ package github.fcopardo.perfdemo.views
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import github.fcopardo.perfdemo.view.MainView
+import github.fcopardo.perfdemo.view.composables.MainView
 
 class KMPreviews {
     @Composable

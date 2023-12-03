@@ -9,6 +9,7 @@ plugins {
     //id("app.cash.sqldelight") version "2.0.0"
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.swiftKLib)
+    alias(libs.plugins.sqldelight)
 }
 
 val coroutinesVersion = "1.7.3"
@@ -60,7 +61,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
                 implementation("io.coil-kt:coil:2.5.0")
                 implementation("io.coil-kt:coil-compose:2.5.0")
-                //implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(project(":commonLib"))
             }
@@ -69,8 +70,8 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
-                //implementation("app.cash.sqldelight:native-driver:$sqlDelightVersion")
-                //implementation("app.cash.sqldelight:native-driver:2.0.0")
+                implementation("app.cash.sqldelight:native-driver:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:native-driver:2.0.0")
                 implementation(project(":commonLib"))
             }
         }
@@ -91,7 +92,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                //implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
+                implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
                 implementation("com.github.skydoves:orbital:0.3.2")
                 implementation(libs.kotlinx.coroutines.core)
@@ -160,11 +161,11 @@ compose.desktop {
     }
 }
 
-/*sqldelight {
+sqldelight {
     databases {
         create("AppDatabase") {
             //packageName.set("github.fcopardo.sqldelight")
             packageName.set("github.fcopardo.perfdemo.cache")
         }
     }
-}*/
+}
