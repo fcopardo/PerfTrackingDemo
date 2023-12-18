@@ -1,5 +1,8 @@
 package github.fcopardo.perfdemo.view
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -11,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import github.fcopardo.perfdemo.data.FileManager
 import github.fcopardo.perfdemo.tracing.EventTracer
+import github.fcopardo.perfdemo.view.composables.MainViewWidgets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -31,12 +35,7 @@ actual class PlatformBoundImageLoader {
             }
         }
         if(bitmapState.value?.bitmap!=null){
-            Image(
-                bitmap = bitmapState.value!!.bitmap!!,
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = modifier.then(Modifier.fillMaxSize())
-            )
+            MainViewWidgets.ItemImage(bitmapState.value!!.bitmap!!)
         }
     }
 
@@ -63,12 +62,12 @@ actual class PlatformBoundImageLoader {
 
         if(bitmapState.value?.bitmap!=null){
             EventTracer.instance.trace(traceName, "mainview", time)
-            Image(
-                bitmap = bitmapState.value!!.bitmap!!,
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = modifier.then(Modifier.fillMaxSize())
-            )
+            AnimatedVisibility(
+                visible = true,
+                enter = fadeIn() + slideInVertically { fullHeight -> fullHeight },
+            ){
+                MainViewWidgets.ItemImage(bitmapState.value!!.bitmap!!)
+            }
             EventTracer.instance.trace(traceName, "mainview", System.currentTimeMillis())
         }
     }

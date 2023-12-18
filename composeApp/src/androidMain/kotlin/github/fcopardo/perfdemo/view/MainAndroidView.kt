@@ -12,7 +12,7 @@ class MainAndroidView {
             val model = viewModel ?: viewModel()
             val searchResult = model.viewModel.searchState
             MainView.Render(searchResult) {
-                model.loadSearch(it)
+                model.viewModel.loadSearch(it)
             }
         }
     }

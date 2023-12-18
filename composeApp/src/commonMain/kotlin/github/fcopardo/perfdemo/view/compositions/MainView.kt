@@ -16,7 +16,7 @@ class MainView {
         @Composable
         fun Render(searchResult : ViewModelValue<MLSearch>, onSearch: (String) -> Unit){
             val time = getTimeMillis()
-            NativeTracer.instance.beginTrace("app_session_$time", false)
+            NativeTracer.instance.beginTrace("app_session_$time", true)
             val name = "start_${time}"
             EventTracer.instance.trace(name, "mainview", time)
             val searchTerms = remember { mutableStateOf<String>("") }

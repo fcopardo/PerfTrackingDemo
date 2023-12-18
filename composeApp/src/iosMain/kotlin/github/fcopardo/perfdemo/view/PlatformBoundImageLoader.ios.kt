@@ -1,5 +1,8 @@
 package github.fcopardo.perfdemo.view
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -10,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import github.fcopardo.perfdemo.concurrency.ScopeProvider
 import github.fcopardo.perfdemo.concurrency.createForJobs
+import github.fcopardo.perfdemo.view.composables.MainViewWidgets
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,7 +27,7 @@ import platform.UIKit.UIImage
 
 actual class PlatformBoundImageLoader {
 
-    var jobScope = ScopeProvider.createForJobs()
+    private var jobScope = ScopeProvider.createForJobs()
 
     @OptIn(ExperimentalForeignApi::class)
     @Composable
@@ -55,12 +59,7 @@ actual class PlatformBoundImageLoader {
             }
         }
         if(bitmapState.value?.bitmap!=null){
-            Image(
-                bitmap = bitmapState.value!!.bitmap!!,
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = modifier.then(Modifier.fillMaxSize())
-            )
+            MainViewWidgets.ItemImage(bitmapState.value!!.bitmap!!)
         }
     }
 }

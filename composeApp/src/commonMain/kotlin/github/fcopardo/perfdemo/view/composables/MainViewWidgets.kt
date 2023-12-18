@@ -1,9 +1,14 @@
 package github.fcopardo.perfdemo.view.composables
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,6 +40,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -163,6 +170,21 @@ class MainViewWidgets {
                         EventTracer.instance.trace("render${item.id}_$time", categories, getTimeMillis(), 0 ,0, args)
                     }
                 }
+            }
+        }
+
+        @Composable
+        fun ItemImage(bitmap: ImageBitmap, modifier : Modifier = Modifier){
+            AnimatedVisibility(
+                visible = true,
+                enter = fadeIn() + slideInVertically { fullHeight -> fullHeight },
+            ){
+                Image(
+                    bitmap = bitmap,
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                    modifier = modifier.then(Modifier.fillMaxSize())
+                )
             }
         }
     }

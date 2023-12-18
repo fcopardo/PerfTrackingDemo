@@ -96,6 +96,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
                 implementation("com.github.skydoves:orbital:0.3.2")
                 implementation(libs.kotlinx.coroutines.core)
+                //implementation(libs.paging.common)
+                //implementation(libs.paging.compose)
             }
         }
 

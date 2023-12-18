@@ -89,7 +89,7 @@ android {
 
 swiftklib {
     create("KImage") {
-        path = file("native/ios/KImage")
+        path = file("native/KImage")
         packageName("github.fcopardo.kimage")
     }
 }
