@@ -1,16 +1,10 @@
 package github.fcopardo.perfdemo.view
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import github.fcopardo.perfdemo.concurrency.ScopeProvider
 import github.fcopardo.perfdemo.concurrency.createForJobs
 import github.fcopardo.perfdemo.view.composables.MainViewWidgets
