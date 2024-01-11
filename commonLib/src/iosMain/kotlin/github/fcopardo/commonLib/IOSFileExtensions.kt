@@ -32,6 +32,13 @@ val NSURL.isDirectory: Boolean
     }
 
 @OptIn(ExperimentalForeignApi::class)
+fun NSURL.exists() : Boolean {
+    return memScoped {
+        NSFileManager.defaultManager.fileExistsAtPath(path!!)
+    }
+}
+
+@OptIn(ExperimentalForeignApi::class)
 fun NSURL.mkdirs() {
     NSFileManager.defaultManager.createDirectoryAtURL(this, true, null, null)
 }

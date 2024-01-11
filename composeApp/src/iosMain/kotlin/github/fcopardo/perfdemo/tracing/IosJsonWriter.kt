@@ -17,15 +17,12 @@ class IosJsonWriter : EventTracer.FileWriter {
     private var finished = false
 
     private fun getFile() : NSURL {
-        println("getting file!")
         if(!traceDir.isDirectory) {
             traceDir.mkdirs()
-            println("directory created!")
         }
         if(activeFile == null) {
             activeFile = File(traceDir, getTimeMillis().toString()+".json")
             amount = 0
-            println("file created")
         }
         return activeFile!!
     }

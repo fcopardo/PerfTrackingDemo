@@ -11,7 +11,6 @@ import platform.UIKit.UIViewController
 
 fun MainViewController() : UIViewController {
     ImageLoader.setPlatformLoader(PlatformBoundImageLoader())
-    val model = MLSearchViewModel()
     EventTracer.instance.jsonWriter = IosJsonWriter()
     return ComposeUIViewController { MainIosView.Render() }
 }
