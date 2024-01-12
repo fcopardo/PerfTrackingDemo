@@ -98,6 +98,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
                 implementation("com.github.skydoves:orbital:0.3.2")
                 implementation(libs.kotlinx.coroutines.core)
+                implementation("app.cash.paging:paging-compose-common:3.3.0-alpha02-0.4.0")
+                implementation("app.cash.paging:paging-common:3.3.0-alpha02-0.4.0")
             }
         }
 
