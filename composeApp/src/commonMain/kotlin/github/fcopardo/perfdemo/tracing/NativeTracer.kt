@@ -6,8 +6,9 @@ class NativeTracer private constructor() {
     }
 
     private var tracer : PlaformNativeTracer = getPlatformNativeTracer()
+    var enabled = false
     fun beginTrace(name : String, systrace : Boolean = true){
-        tracer.beginTrace(name, systrace)
+        if(enabled) tracer.beginTrace(name, systrace)
     }
 
     fun endTrace(){

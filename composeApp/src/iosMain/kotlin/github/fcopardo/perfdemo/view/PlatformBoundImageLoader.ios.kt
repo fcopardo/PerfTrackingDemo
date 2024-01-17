@@ -1,5 +1,9 @@
 package github.fcopardo.perfdemo.view
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +39,8 @@ actual class PlatformBoundImageLoader {
     @Composable
     actual fun loadNetwork(imageUri: String, modifier: Modifier) {
         val bitmapState: MutableState<LoadedFile?> = remember { mutableStateOf(null) }
+        val time = getTimeMillis()
+        val traceName = "load_${imageUri}_cache_$time"
         if(bitmapState.value?.isAddressEqual(imageUri)!=true){
             jobScope.getScope().launch {
                 var time = getTimeMillis()
@@ -60,7 +66,9 @@ actual class PlatformBoundImageLoader {
             }
         }
         if(bitmapState.value?.bitmap!=null){
+            EventTracer.instance.trace(traceName, "mainview", time)
             MainViewWidgets.ItemImage(bitmapState.value!!.bitmap!!)
+            EventTracer.instance.trace(traceName, "mainview", getTimeMillis())
         }
     }
 }

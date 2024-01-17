@@ -1,6 +1,7 @@
 package github.fcopardo.perfdemo.view.composables
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
@@ -175,8 +176,11 @@ class MainViewWidgets {
 
         @Composable
         fun ItemImage(bitmap: ImageBitmap, modifier : Modifier = Modifier){
+            val visibleState = remember {
+                MutableTransitionState(false).apply { targetState = true }
+            }
             AnimatedVisibility(
-                visible = true,
+                visibleState = visibleState,
                 enter = fadeIn() + slideInVertically { fullHeight -> fullHeight },
             ){
                 Image(

@@ -13,7 +13,7 @@ class IOsTracer private constructor() : PlaformNativeTracer {
 
     @OptIn(ExperimentalForeignApi::class)
     override fun beginTrace(name: String, systrace: Boolean) {
-        if(systrace && !systraceOn){
+        if(systrace){
             activeName = name
             Tracer.logEndWithId(name, "", "", "")
             systraceOn = true
@@ -22,7 +22,7 @@ class IOsTracer private constructor() : PlaformNativeTracer {
 
     @OptIn(ExperimentalForeignApi::class)
     override fun endTrace() {
-        if (activeName.isNotEmpty() && systraceOn){
+        if (activeName.isNotEmpty()){
             Tracer.logStartWithId(activeName, "", "", "")
             activeName = ""
             systraceOn = false

@@ -1,6 +1,7 @@
 package github.fcopardo.perfdemo.view
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
@@ -62,12 +63,7 @@ actual class PlatformBoundImageLoader {
 
         if(bitmapState.value?.bitmap!=null){
             EventTracer.instance.trace(traceName, "mainview", time)
-            AnimatedVisibility(
-                visible = true,
-                enter = fadeIn() + slideInVertically { fullHeight -> fullHeight },
-            ){
-                MainViewWidgets.ItemImage(bitmapState.value!!.bitmap!!)
-            }
+            MainViewWidgets.ItemImage(bitmapState.value!!.bitmap!!)
             EventTracer.instance.trace(traceName, "mainview", System.currentTimeMillis())
         }
     }
