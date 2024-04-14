@@ -2,6 +2,8 @@ package github.fcopardo.perfdemo.view.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
@@ -108,67 +110,75 @@ class MainViewWidgets {
         @OptIn(ExperimentalResourceApi::class)
         @Composable
         fun ItemList(mlItems : List<Results>){
-            LazyColumn(modifier = Modifier.padding(4.dp)) {
-                items(mlItems, key = {it.id!!}){ item ->
-                    val bookmarked = remember { mutableStateOf(false) }
-                    Card(
-                        shape = RoundedCornerShape(4.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp)
-                    ) {
-                        val time = getTimeMillis()
+            val visibleState = remember {
+                MutableTransitionState(false).apply { targetState = true }
+            }
+            AnimatedVisibility(
+                visibleState = visibleState,
+                enter = fadeIn() +  expandHorizontally() { fullHeight -> fullHeight },
+            ){
+                LazyColumn(modifier = Modifier.padding(4.dp)) {
+                    items(mlItems, key = {it.id!!}){ item ->
+                        val bookmarked = remember { mutableStateOf(false) }
+                        Card(
+                            shape = RoundedCornerShape(4.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp)
+                        ) {
+                            val time = getTimeMillis()
 
-                        val args = mutableMapOf<String, String>().apply {
-                            item.id?.let {
-                                this["itemId"] = it
+                            val args = mutableMapOf<String, String>().apply {
+                                item.id?.let {
+                                    this["itemId"] = it
+                                }
                             }
-                        }
 
-                        val safeId = if(item.id != null){
-                            item.id!!
-                        } else {
-                            ""
-                        }
+                            val safeId = if(item.id != null){
+                                item.id!!
+                            } else {
+                                ""
+                            }
 
-                        val categories = mutableListOf<String>("mainview", safeId)
+                            val categories = mutableListOf<String>("mainview", safeId)
 
-                        EventTracer.instance.trace("render${item.id}_$time", categories, time, 0, 0, args)
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            EventTracer.instance.trace("render${item.id}_$time", categories, time, 0, 0, args)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
                                 Box(modifier = Modifier.size(120.dp)) {
 
-                                val firstImage = if(item.thumbnail != null){
-                                    item.thumbnail
-                                } else {
-                                    ""
-                                }
-                                ImageLoader.getInstance()!!.load(firstImage)
-                                FloatingActionButton(
-                                    onClick = {
-                                        bookmarked.value = !bookmarked.value
-                                    },
-                                    modifier = Modifier.align(Alignment.TopEnd).then(Modifier.size(20.dp, 20.dp))
-                                ) {
-                                    if(bookmarked.value){
-                                        Icon(Icons.Filled.Favorite, contentDescription = null)
+                                    val firstImage = if(item.thumbnail != null){
+                                        item.thumbnail
                                     } else {
-                                        Icon(Icons.Outlined.FavoriteBorder, contentDescription = null)
+                                        ""
+                                    }
+                                    ImageLoader.getInstance()!!.load(firstImage)
+                                    FloatingActionButton(
+                                        onClick = {
+                                            bookmarked.value = !bookmarked.value
+                                        },
+                                        modifier = Modifier.align(Alignment.TopEnd).then(Modifier.size(20.dp, 20.dp))
+                                    ) {
+                                        if(bookmarked.value){
+                                            Icon(Icons.Filled.Favorite, contentDescription = null)
+                                        } else {
+                                            Icon(Icons.Outlined.FavoriteBorder, contentDescription = null)
+                                        }
                                     }
                                 }
+                                Column(modifier = Modifier.padding(start = 8.dp)) {
+                                    Text(text = "${item.title}", style = MaterialTheme.typography.body1)
+                                    Spacer(modifier = Modifier.height(3.dp))
+                                    Text(text = "${item.price}", style = MaterialTheme.typography.h6)
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Text(text = "${item.address?.cityName}", style = MaterialTheme.typography.body2)
+                                    Spacer(modifier = Modifier.height(1.dp))
+                                    Text(text = "${item.condition}", style = MaterialTheme.typography.body2)
+                                    Spacer(Modifier.weight(1f))
+                                    Text(text = "${item.installments?.amount} X ${item.installments?.quantity}", style = MaterialTheme.typography.body1)
+                                }
                             }
-                            Column(modifier = Modifier.padding(start = 8.dp)) {
-                                Text(text = "${item.title}", style = MaterialTheme.typography.body1)
-                                Spacer(modifier = Modifier.height(3.dp))
-                                Text(text = "${item.price}", style = MaterialTheme.typography.h6)
-                                Spacer(modifier = Modifier.height(2.dp))
-                                Text(text = "${item.address?.cityName}", style = MaterialTheme.typography.body2)
-                                Spacer(modifier = Modifier.height(1.dp))
-                                Text(text = "${item.condition}", style = MaterialTheme.typography.body2)
-                                Spacer(Modifier.weight(1f))
-                                Text(text = "${item.installments?.amount} X ${item.installments?.quantity}", style = MaterialTheme.typography.body1)
-                            }
+                            EventTracer.instance.trace("render${item.id}_$time", categories, getTimeMillis(), 0 ,0, args)
                         }
-                        EventTracer.instance.trace("render${item.id}_$time", categories, getTimeMillis(), 0 ,0, args)
                     }
                 }
             }
