@@ -15,7 +15,7 @@ data class MLItem (
   @SerialName("subtitle"                         ) var subtitle                     : String?               = null,
   @SerialName("seller_id"                        ) var sellerId                     : Int?                  = null,
   @SerialName("category_id"                      ) var categoryId                   : String?               = null,
-  @SerialName("official_store_id"                ) var officialStoreId              : String?               = null,
+  @SerialName("official_store_id"                ) var officialStoreId              : Int?               = null,
   @Serializable(with = AnyToStringSerializer::class)
   @SerialName("price"                            ) var price                        : String?                  = null,
   @Serializable(with = AnyToStringSerializer::class)

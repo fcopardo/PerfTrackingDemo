@@ -25,9 +25,9 @@ data class Results (
     @SerialName("thumbnail"           ) var thumbnail          : String?               = null,
     @SerialName("currency_id"         ) var currencyId         : String?               = null,
     @SerialName("order_backend"       ) var orderBackend       : Int?                  = null,
-    @SerialName("price"               ) var price              : Int?                  = null,
-    @SerialName("original_price"      ) var originalPrice      : Int?                  = null,
-    @SerialName("sale_price"          ) var salePrice          : String?               = null,
+    @SerialName("price"               ) var price              : Float?                  = null,
+    @SerialName("original_price"      ) var originalPrice      : Float?                  = null,
+    //@SerialName("sale_price"          ) var salePrice          : String?               = null,
     @SerialName("sold_quantity"       ) var soldQuantity       : Int?                  = null,
     @SerialName("available_quantity"  ) var availableQuantity  : Int?                  = null,
     @Serializable(with=AnyToStringSerializer::class)
